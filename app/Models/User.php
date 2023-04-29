@@ -59,6 +59,6 @@ class User extends Authenticatable
 
     public function currentBadge(): BelongsTo
     {
-        return $this->belongsTo(Badge::class);
+        return $this->belongsTo(Badge::class)->withDefault();
     }
 }
