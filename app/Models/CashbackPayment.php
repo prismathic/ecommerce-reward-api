@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CashbackPayment extends Model
 {
     use HasFactory;
+
+    public const STATUSES = [
+        'PENDING' => 'pending',
+        'SUCCESSFUL' => 'successful',
+        'FAILED' => 'failed',
+    ];
 }
