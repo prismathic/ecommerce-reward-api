@@ -26,6 +26,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'current_badge_id',
+        'account_number',
+        'bank_code',
     ];
 
     /**
@@ -65,7 +68,7 @@ class User extends Authenticatable
     public function nextBadge(): ?Badge
     {
         return Badge::where('required_achievement_count', '>', $this->currentBadge->required_achievement_count ?? 0)
-            ->orderByAsc('required_achievement_count')
+            ->orderBy('required_achievement_count')
             ->first();
     }
 
@@ -77,7 +80,7 @@ class User extends Authenticatable
     public function getNextAvailableAchievements(): array
     {
         return Achievement::query()->whereNotIn('name', $this->getUnlockedAchievements())
-            ->orderByAsc('required_purchase_count')
+            ->orderBy('required_purchase_count')
             ->pluck('name')
             ->toArray();
     }
