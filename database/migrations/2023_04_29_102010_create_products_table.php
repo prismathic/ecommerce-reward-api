@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->decimal('price', 13, 2, true);
             $table->timestamps();
         });
