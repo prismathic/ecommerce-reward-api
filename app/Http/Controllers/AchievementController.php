@@ -14,7 +14,7 @@ class AchievementController extends Controller
      */
     public function index(User $user)
     {
-        $user->load(['achievements', 'current_badge']);
+        $user->load(['achievements', 'currentBadge']);
 
         return $this->okResponse('Achievement data retrieved successfully.', new AchievementResource($user));
     }
