@@ -15,7 +15,7 @@ return new class() extends Migration {
         Schema::create('user_achievements', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained();
-            $table->foreignUuid('achievement_id')->constrained();
+            $table->foreignId('achievement_id')->constrained();
             $table->timestamp('unlocked_at');
         });
     }

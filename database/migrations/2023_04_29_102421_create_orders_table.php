@@ -13,7 +13,7 @@ return new class() extends Migration {
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained();
             $table->foreignUuid('product_id')->constrained();
             $table->integer('quantity')->unsigned();

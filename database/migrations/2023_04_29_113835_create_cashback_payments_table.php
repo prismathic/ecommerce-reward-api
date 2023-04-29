@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::create('cashback_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained();
+            $table->foreignUuid('order_id')->constrained();
             $table->decimal('amount', 13, 2, true);
             $table->string('status');
             $table->string('payment_client');
