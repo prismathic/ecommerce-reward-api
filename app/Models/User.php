@@ -61,4 +61,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Badge::class)->withDefault();
     }
+
+    public function nextBadge(): ?Badge
+    {
+        return Badge::where('required_achievement_count', '>', $this->currentBadge->required_achievement_count ?? 0)
+            ->orderByAsc('required_achievement_count')
+            ->first();
+    }
+
+    public function getUnlockedAchievements(): array
+    {
+        return $this->achievements->pluck('name')->toArray();
+    }
+
+    public function getNextAvailableAchievements(): array
+    {
+        return Achievement::query()->whereNotIn('name', $this->getUnlockedAchievements())
+            ->orderByAsc('required_purchase_count')
+            ->pluck('name')
+            ->toArray();
+    }
 }
