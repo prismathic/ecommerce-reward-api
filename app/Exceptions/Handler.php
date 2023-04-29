@@ -3,6 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +49,40 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (ValidationException $e, $request) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->validator->errors()->first(),
+            ], JsonResponse::HTTP_BAD_REQUEST);
+        });
+
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Resource not found.',
+            ], JsonResponse::HTTP_NOT_FOUND);
+        });
+
+        $this->renderable(function (HttpException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        });
+
+        $this->renderable(function (Throwable $e) {
+            $basicResponseData = [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+
+            if (app()->environment(['local', 'testing', 'development'])) {
+                $basicResponseData = array_merge($basicResponseData, ['_debug' => $e->getTrace()]);
+            }
+
+            return response()->json($basicResponseData, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         });
     }
 }
