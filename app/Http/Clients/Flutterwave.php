@@ -31,6 +31,6 @@ class Flutterwave implements PaymentClient
 
     public function getIdentifier(): string
     {
-        return 'Flutterwave';
+        return 'flutterwave';
     }
 }
