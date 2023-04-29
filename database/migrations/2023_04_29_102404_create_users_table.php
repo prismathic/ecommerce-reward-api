@@ -19,6 +19,8 @@ return new class() extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignUuid('current_badge_id')->constrained('badges');
+            $table->string('account_number');
+            $table->string('bank_code');
             $table->rememberToken();
             $table->timestamps();
         });
