@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\User\AchievementUnlocked;
 use App\Events\User\BadgeUnlocked;
+use App\Exceptions\CannotProcessOrder;
 use App\Mail\OrderFailed;
 use App\Mail\OrderProcessed;
 use App\Models\Achievement;
@@ -43,6 +44,8 @@ class ProcessOrder implements ShouldQueue
     public function handle()
     {
         if ($this->order->status !== Order::STATUS_PENDING) {
+            $this->fail(new CannotProcessOrder('A non-pending order cannot be processed.'));
+
             return;
         }
 
@@ -106,6 +109,6 @@ class ProcessOrder implements ShouldQueue
 
         $this->user->update(['current_badge_id' => $unlockableBadge->id]);
 
-        event(new BadgeUnlocked($unlockableBadge->name, $this->user));
+        event(new BadgeUnlocked($unlockableBadge->name, $this->user, $this->order));
     }
 }

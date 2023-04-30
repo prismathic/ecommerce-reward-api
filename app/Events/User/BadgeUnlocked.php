@@ -2,6 +2,7 @@
 
 namespace App\Events\User;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,7 +19,7 @@ class BadgeUnlocked implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(public string $badgeName, public User $user)
+    public function __construct(public string $badgeName, public User $user, public Order $order)
     {
     }
 
