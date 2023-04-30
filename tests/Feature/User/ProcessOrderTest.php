@@ -296,6 +296,44 @@ class ProcessOrderTest extends TestCase
         Mail::assertSent(OrderProcessed::class);
     }
 
+    public function testItSetsACashbackPaymentAsFailedWhenCallToPaymentClientIsUnsuccessful()
+    {
+        Mail::fake();
+        $this->instance(PaymentClient::class, (new PaymentClientMock())->switchState('failed'));
+
+        $user = $this->createAuthenticatedUser();
+        $payload = $this->getOrderCreationPayload();
+        $firstBadge = Badge::first();
+
+        $response = $this->post('api/orders', $payload);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'status',
+                'message',
+                'data' => [
+                    'order_id',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('orders', [
+            'product_id' => $payload['product'],
+            'user_id' => $user->id,
+            'status' => Order::STATUS_PROCESSED,
+            'quantity' => $payload['quantity'],
+        ]);
+
+        $this->assertDatabaseHas('cashback_payments', [
+            'amount' => User::BADGE_UNLOCKING_CASHBACK_AMOUNT,
+            'status' => CashbackPayment::STATUSES['FAILED'],
+            'reason' => "Badge unlocked: {$firstBadge->name}",
+            'account_number' => $user->account_number,
+            'bank_code' => $user->bank_code,
+        ]);
+
+        Mail::assertSent(OrderProcessed::class);
+    }
+
     /**
      * Create an authenticated user to test with.
      *
