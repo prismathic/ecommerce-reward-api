@@ -17,6 +17,8 @@ return new class() extends Migration {
             $table->foreignUuid('order_id')->constrained();
             $table->decimal('amount', 13, 2, true);
             $table->string('status');
+            $table->string('reference')->unique();
+            $table->string('client_reference')->nullable();
             $table->string('payment_client');
             $table->string('reason');
             $table->string('account_number');
