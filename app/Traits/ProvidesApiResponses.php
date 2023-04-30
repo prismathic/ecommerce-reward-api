@@ -56,6 +56,21 @@ trait ProvidesApiResponses
     }
 
     /**
+     * Send a formatted 401 HTTP response.
+     *
+     * @param string $message
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unauthenticatedResponse(string $message): JsonResponse
+    {
+        return response()->json([
+            'status' => false,
+            'message' => $message,
+        ], JsonResponse::HTTP_UNAUTHORIZED);
+    }
+
+    /**
      * Send a formatted 404 HTTP response.
      *
      * @param string|null $message
