@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function currentBadge(): BelongsTo
     {
-        return $this->belongsTo(Badge::class)->withDefault();
+        return $this->belongsTo(Badge::class)->withDefault(['name' => 'Newbie']);
     }
 
     public function unlockAchievement(Achievement $achievement): void
