@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Events\User\BadgeUnlocked;
-use App\Listeners\RewardUnlocked;
 use App\Listeners\User\InitiateCashbackPayment;
+use App\Listeners\User\RewardUnlocked;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
