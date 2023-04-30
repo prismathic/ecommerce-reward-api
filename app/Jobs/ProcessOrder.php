@@ -97,7 +97,7 @@ class ProcessOrder implements ShouldQueue
             return;
         }
 
-        $this->user->achievements()->syncWithoutDetaching([$unlockableAchievement->id => ['unlocked_at' => now()]]);
+        $this->user->unlockAchievement($unlockableAchievement);
 
         event(new AchievementUnlocked($unlockableAchievement->name, $this->user));
 
@@ -108,7 +108,7 @@ class ProcessOrder implements ShouldQueue
             return;
         }
 
-        $this->user->update(['current_badge_id' => $unlockableBadge->id]);
+        $this->user->unlockBadge($unlockableBadge);
 
         event(new BadgeUnlocked($unlockableBadge->name, $this->user, $this->order));
     }

@@ -50,6 +50,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public const BADGE_UNLOCKING_CASHBACK_AMOUNT = 300;
+
     public function achievements(): BelongsToMany
     {
         return $this->belongsToMany(Achievement::class, 'user_achievements');
@@ -63,6 +65,16 @@ class User extends Authenticatable
     public function currentBadge(): BelongsTo
     {
         return $this->belongsTo(Badge::class)->withDefault();
+    }
+
+    public function unlockAchievement(Achievement $achievement): void
+    {
+        $this->achievements()->syncWithoutDetaching([$achievement->id => ['unlocked_at' => now()]]);
+    }
+
+    public function unlockBadge(Badge $badge): void
+    {
+        $this->update(['current_badge_id' => $badge->id]);
     }
 
     public function nextBadge(): ?Badge

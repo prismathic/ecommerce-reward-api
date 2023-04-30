@@ -42,8 +42,8 @@ class ViewAchievementTest extends TestCase
             ->orderBy('required_achievement_count')
             ->first();
 
-        $user->achievements()->attach($unlockedAchievement->id, ['unlocked_at' => now()]);
-        $user->update(['current_badge_id' => $currentBadge->id]);
+        $user->unlockAchievement($unlockedAchievement);
+        $user->unlockBadge($currentBadge);
 
         $response = $this->get("/api/users/{$user->id}/achievements");
 
