@@ -95,7 +95,7 @@ While migrating (and seeding), a default user is created with the following cred
 -   Email: `test@example.com`
 -   Password: `password`
 
-The Postman documentation (https://documenter.getpostman.com/view/13400573/2s93eSaG4M) outlines all existing endpoints on the application:
+The Postman documentation (https://documenter.getpostman.com/view/13400573/2s93eSaG4M) outlines all existing endpoints on the application; as well as examples of how to interact with them:
 
 -   Authentication (Login) - `POST /api/auth/login` (With `email` and `password` in the request payload)
 -   Authentication (Logout) - `POST /api/auth/logout`
