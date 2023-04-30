@@ -4,8 +4,10 @@ namespace App\Http\Clients;
 
 use App\Dtos\PaymentData;
 
-interface PaymentClient
+abstract class PaymentClient
 {
+    public const BASE_CURRENCY = 'NGN';
+
     /**
      * Initiate a payout based on provided payment data.
      *
@@ -13,12 +15,12 @@ interface PaymentClient
      *
      * @return array
      */
-    public function initiatePayout(PaymentData $paymentData): array;
+    abstract public function initiatePayout(PaymentData $paymentData): array;
 
     /**
      * Get the unique identifier for the payment client.
      *
      * @return string
      */
-    public function getIdentifier(): string;
+    abstract public function getIdentifier(): string;
 }

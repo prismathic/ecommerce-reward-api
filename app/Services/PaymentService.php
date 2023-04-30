@@ -24,24 +24,31 @@ class PaymentService
      */
     public function initiateCashbackPayment(Order $order, float $amount, string $reason): void
     {
-        $requestPayload = [
-            'account_number' => $order->user->account_number,
-            'bank_code' => $order->user->bank_code,
-            'reference' => $order->id,
-            'reason' => $reason,
-            'amount' => $amount,
-        ];
-
-        $this->paymentClient->initiatePayout(PaymentData::from($requestPayload));
-
-        CashbackPayment::create([
+        $payment = CashbackPayment::firstOrCreate([
             'order_id' => $order->id,
+            'reason' => $reason,
+        ], [
+            'reference' => CashbackPayment::generateReference($order),
             'account_number' => $order->user->account_number,
             'bank_code' => $order->user->bank_code,
-            'reason' => $reason,
             'amount' => $amount,
             'payment_client' => $this->paymentClient->getIdentifier(),
             'status' => CashbackPayment::STATUSES['PENDING'],
         ]);
+
+        if ($payment->status !== CashbackPayment::STATUSES['PENDING']) {
+            return;
+        }
+
+        try {
+            $payment->update(['status' => CashbackPayment::STATUSES['PROCESSING']]);
+
+            $this->paymentClient->initiatePayout(PaymentData::from($payment));
+        } catch (\Throwable $e) {
+            report($e);
+            $payment->update(['status' => CashbackPayment::STATUSES['FAILED']]);
+
+            throw $e;
+        }
     }
 }
