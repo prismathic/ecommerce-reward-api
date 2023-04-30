@@ -4,9 +4,11 @@ namespace App\Jobs;
 
 use App\Events\User\AchievementUnlocked;
 use App\Events\User\BadgeUnlocked;
+use App\Mail\OrderFailed;
+use App\Mail\OrderProcessed;
 use App\Models\Achievement;
 use App\Models\Badge;
-use App\Models\Product;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,18 +17,22 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ProcessOrder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    private User $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(private User $user, private array $orderData)
+    public function __construct(private Order $order)
     {
+        $this->user = $this->order->user;
     }
 
     /**
@@ -36,28 +42,30 @@ class ProcessOrder implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->order->status !== Order::STATUS_PENDING) {
+            return;
+        }
+
+        $this->order->update(['status' => Order::STATUS_PROCESSING]);
+
         DB::beginTransaction();
 
-        $product = Product::findOrFail($this->orderData['product']);
-
         try {
-            $this->user->orders()->create([
-                'product_id' => $product->id,
-                'quantity' => $this->orderData['quantity'],
-                'total' => $product->price * $this->orderData['quantity'],
-            ]);
+            $this->order->update(['status' => Order::STATUS_PROCESSED]);
 
             $this->verifyIfPurchaseUnlocksAchievement();
 
             DB::commit();
 
-            //send order completion mail
+            Mail::to($this->user)->send(new OrderProcessed($this->order));
         } catch (\Throwable $th) {
             report($th); //report exception for logging
 
             DB::rollBack();
 
-            //send mail if order cannot be processed
+            $this->order->update(['status' => Order::STATUS_FAILED]);
+
+            Mail::to($this->user)->send(new OrderFailed($this->order));
         }
     }
 
@@ -78,7 +86,7 @@ class ProcessOrder implements ShouldQueue
      */
     private function verifyIfPurchaseUnlocksAchievement(): void
     {
-        $purchaseCount = $this->user->orders()->count();
+        $purchaseCount = $this->user->orders()->processed()->count();
         $unlockableAchievement = Achievement::where('required_purchase_count', $purchaseCount)->first();
 
         if (! $unlockableAchievement) {
