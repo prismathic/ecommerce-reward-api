@@ -1,12 +1,14 @@
 <x-mail::message>
-# Introduction
+# Achievement Unlocked!
 
-The body of your message.
+<x-mail::panel>
+Hey Superstar! <br>
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+You just unlocked a new achievement: <strong>{{$achievement}}</strong>!<br>
 
-Thanks,<br>
+Here's to many more achievements :beer: 
+</x-mail::panel>
+
+Thanks for shopping with us,<br>
 {{ config('app.name') }}
 </x-mail::message>

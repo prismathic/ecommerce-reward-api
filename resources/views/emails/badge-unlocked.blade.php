@@ -1,12 +1,14 @@
 <x-mail::message>
-# Introduction
+# Badge Unlocked!
 
-The body of your message.
+<x-mail::panel>
+Hey Superstar! <br>
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+You just unlocked a new badge: <strong>{{$badge}}</strong>!<br>
 
-Thanks,<br>
+Feel free to show it off to the others!
+</x-mail::panel>
+
+Thanks for shopping with us,<br>
 {{ config('app.name') }}
 </x-mail::message>

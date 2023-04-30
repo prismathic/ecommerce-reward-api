@@ -18,9 +18,8 @@ class BadgeUnlockedMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public string $badgeName)
     {
-        //
     }
 
     /**
@@ -44,6 +43,9 @@ class BadgeUnlockedMail extends Mailable implements ShouldQueue
     {
         return new Content(
             markdown: 'emails.badge-unlocked',
+            with: [
+                'badge' => $this->badgeName,
+            ],
         );
     }
 
