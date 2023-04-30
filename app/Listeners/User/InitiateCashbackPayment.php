@@ -6,9 +6,14 @@ use App\Events\User\BadgeUnlocked;
 use App\Models\User;
 use App\Services\PaymentService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 class InitiateCashbackPayment implements ShouldQueue
 {
+    use InteractsWithQueue;
+
+    public $afterCommit = true;
+
     /**
      * Create the event listener.
      *
@@ -16,7 +21,6 @@ class InitiateCashbackPayment implements ShouldQueue
      */
     public function __construct(private PaymentService $paymentService)
     {
-        //
     }
 
     /**
@@ -34,8 +38,8 @@ class InitiateCashbackPayment implements ShouldQueue
                 User::BADGE_UNLOCKING_CASHBACK_AMOUNT,
                 "Badge unlocked: {$event->badgeName}"
             );
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (\Throwable $e) {
+            $this->fail($e);
         }
     }
 }

@@ -18,6 +18,7 @@ class CashbackPayment extends Model
 
     public const STATUSES = [
         'PENDING' => 'pending',
+        'PROCESSING' => 'processing',
         'SUCCESSFUL' => 'successful',
         'FAILED' => 'failed',
     ];
