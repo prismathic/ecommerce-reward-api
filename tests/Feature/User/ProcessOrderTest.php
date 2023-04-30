@@ -6,6 +6,7 @@ use App\Events\User\AchievementUnlocked;
 use App\Events\User\BadgeUnlocked;
 use App\Http\Clients\PaymentClient;
 use App\Jobs\ProcessOrder;
+use App\Mail\BadgeUnlockedMail;
 use App\Mail\OrderProcessed;
 use App\Models\Achievement;
 use App\Models\Badge;
@@ -294,6 +295,7 @@ class ProcessOrderTest extends TestCase
         ]);
 
         Mail::assertSent(OrderProcessed::class);
+        Mail::assertQueued(BadgeUnlockedMail::class);
     }
 
     public function testItSetsACashbackPaymentAsFailedWhenCallToPaymentClientIsUnsuccessful()
@@ -332,6 +334,7 @@ class ProcessOrderTest extends TestCase
         ]);
 
         Mail::assertSent(OrderProcessed::class);
+        Mail::assertQueued(BadgeUnlockedMail::class);
     }
 
     /**

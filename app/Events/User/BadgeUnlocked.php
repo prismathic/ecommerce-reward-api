@@ -32,4 +32,17 @@ class BadgeUnlocked implements ShouldBroadcast
     {
         return new PrivateChannel("users.{$this->user->id}");
     }
+
+    /**
+     * Data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'user' => $this->user,
+            'badgeName' => $this->badgeName,
+        ];
+    }
 }
