@@ -1,12 +1,12 @@
 <x-mail::message>
-# Introduction
-
-The body of your message.
-
-<x-mail::button :url="''">
-Button Text
+# Order Processed!
+ 
+Your order of ID: {{$order->id}} has successfully been processed.
+ 
+<x-mail::button :url="$url">
+View Order
 </x-mail::button>
-
-Thanks,<br>
+ 
+Thanks for shopping with us,<br>
 {{ config('app.name') }}
 </x-mail::message>
