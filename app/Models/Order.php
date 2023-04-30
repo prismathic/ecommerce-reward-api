@@ -17,6 +17,8 @@ class Order extends Model
         'discount' => 'decimal:2',
     ];
 
+    protected $guarded = ['id'];
+
     public const STATUS_PENDING = 'pending';
     public const STATUS_PROCESSING = 'processing';
     public const STATUS_FAILED = 'failed';

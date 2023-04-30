@@ -14,6 +14,8 @@ class CashbackPayment extends Model
         'amount' => 'decimal:2',
     ];
 
+    protected $guarded = ['id'];
+
     public const STATUSES = [
         'PENDING' => 'pending',
         'SUCCESSFUL' => 'successful',
