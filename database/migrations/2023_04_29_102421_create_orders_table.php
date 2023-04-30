@@ -17,7 +17,7 @@ return new class() extends Migration {
             $table->foreignUuid('user_id')->constrained();
             $table->foreignUuid('product_id')->constrained();
             $table->integer('quantity')->unsigned();
-            $table->decimal('discount', 15, 2, true);
+            $table->decimal('discount', 15, 2, true)->default(0);
             $table->decimal('total', 15, 2, true);
             $table->timestamps();
         });
