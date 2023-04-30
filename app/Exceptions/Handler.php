@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -70,6 +71,13 @@ class Handler extends ExceptionHandler
                 'status' => false,
                 'message' => $e->getMessage(),
             ], $e->getStatusCode());
+        });
+
+        $this->renderable(function (AuthenticationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthenticated',
+            ], JsonResponse::HTTP_UNAUTHORIZED);
         });
 
         $this->renderable(function (Throwable $e) {
