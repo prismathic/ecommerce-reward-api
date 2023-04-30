@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,8 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('auth:sanctum')->post('/orders', [OrderController::class, 'create']);
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::prefix('{user}')->group(function () {
