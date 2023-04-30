@@ -2,16 +2,18 @@
 
 namespace App\Http\Clients;
 
+use App\Dtos\PaymentData;
+
 interface PaymentClient
 {
     /**
      * Initiate a payout based on provided payment data.
      *
-     * @param array $paymentData
+     * @param \App\Dtos\PaymentData $paymentData
      *
      * @return array
      */
-    public function initiatePayout(array $paymentData): array;
+    public function initiatePayout(PaymentData $paymentData): array;
 
     /**
      * Get the unique identifier for the payment client.

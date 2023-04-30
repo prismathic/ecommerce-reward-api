@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dtos\PaymentData;
 use App\Http\Clients\PaymentClient;
 use App\Models\CashbackPayment;
 use App\Models\Order;
@@ -21,7 +22,7 @@ class PaymentService
      *
      * @return void
      */
-    public function processCashback(Order $order, float $amount, string $reason): void
+    public function initiateCashbackPayment(Order $order, float $amount, string $reason): void
     {
         $requestPayload = [
             'account_number' => $order->user->account_number,
@@ -31,7 +32,7 @@ class PaymentService
             'amount' => $amount,
         ];
 
-        $this->paymentClient->initiatePayout($requestPayload);
+        $this->paymentClient->initiatePayout(PaymentData::from($requestPayload));
 
         CashbackPayment::create([
             'order_id' => $order->id,
