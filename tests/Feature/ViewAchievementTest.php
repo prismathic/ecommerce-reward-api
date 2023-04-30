@@ -72,7 +72,7 @@ class ViewAchievementTest extends TestCase
         $this->assertSame($currentBadge->name, $responseData['current_badge']);
         $this->assertSame($expectedNextBadge->name, $responseData['next_badge']);
         $this->assertEquals(
-            $expectedNextBadge->required_achievement_count - $currentBadge->required_achievement_count,
+            $expectedNextBadge->required_achievement_count - $user->achievements()->count(),
             $responseData['remaining_to_unlock_next_badge'],
         );
     }

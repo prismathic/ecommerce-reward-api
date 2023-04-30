@@ -17,8 +17,8 @@ class AchievementResource extends JsonResource
     {
         $currentBadge = $this->currentBadge;
         $nextBadge = $this->nextBadge();
-        $differenceBetweenNextAndCurrentBadge = $nextBadge
-            ? $nextBadge->required_achievement_count - $currentBadge->required_achievement_count
+        $achievementsLeftToUnlockNextBadge = $nextBadge
+            ? $nextBadge->required_achievement_count - $this->achievements->count()
             : 0;
 
         return [
@@ -26,7 +26,7 @@ class AchievementResource extends JsonResource
             'next_available_achievements' => $this->getNextAvailableAchievements(),
             'current_badge' => $currentBadge->name,
             'next_badge' => $nextBadge->name ?? null,
-            'remaining_to_unlock_next_badge' => $differenceBetweenNextAndCurrentBadge,
+            'remaining_to_unlock_next_badge' => $achievementsLeftToUnlockNextBadge,
         ];
     }
 }
