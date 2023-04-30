@@ -12,6 +12,11 @@ class Order extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $casts = [
+        'total' => 'decimal:2',
+        'discount' => 'decimal:2',
+    ];
+
     public const STATUS_PENDING = 'pending';
     public const STATUS_PROCESSING = 'processing';
     public const STATUS_FAILED = 'failed';
