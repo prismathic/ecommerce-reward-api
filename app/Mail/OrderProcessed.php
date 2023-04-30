@@ -43,6 +43,10 @@ class OrderProcessed extends Mailable
     {
         return new Content(
             markdown: 'emails.orders.processed',
+            with: [
+                'order' => $this->order,
+                'url' => config('app.url'),
+            ],
         );
     }
 
