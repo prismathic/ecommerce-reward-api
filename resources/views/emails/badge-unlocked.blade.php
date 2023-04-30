@@ -6,7 +6,7 @@ Hey Superstar! <br>
 
 You just unlocked a new badge: <strong>{{$badge}}</strong>!<br>
 
-Feel free to show it off to the others!
+As a result of this great milestone, we will be paying you a cashback of {{$amount}} NGN on your recent order.
 </x-mail::panel>
 
 Thanks for shopping with us,<br>

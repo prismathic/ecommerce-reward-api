@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -45,6 +46,7 @@ class BadgeUnlockedMail extends Mailable implements ShouldQueue
             markdown: 'emails.badge-unlocked',
             with: [
                 'badge' => $this->badgeName,
+                'amount' => User::BADGE_UNLOCKING_CASHBACK_AMOUNT,
             ],
         );
     }
