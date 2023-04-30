@@ -58,11 +58,12 @@ class ProcessOrder implements ShouldQueue
 
             $this->verifyIfPurchaseUnlocksAchievement();
 
-            DB::commit();
-
             Mail::to($this->user)->send(new OrderProcessed($this->order));
+
+            DB::commit();
         } catch (\Throwable $th) {
             report($th); //report exception for logging
+            logger()->error("Failed to process order {$this->order->id}. Reason: {$th->getMessage()}");
 
             DB::rollBack();
 
@@ -96,7 +97,7 @@ class ProcessOrder implements ShouldQueue
             return;
         }
 
-        $this->user->achievements()->attach($unlockableAchievement->id, ['unlocked_at' => now()]);
+        $this->user->achievements()->syncWithoutDetaching([$unlockableAchievement->id => ['unlocked_at' => now()]]);
 
         event(new AchievementUnlocked($unlockableAchievement->name, $this->user));
 
