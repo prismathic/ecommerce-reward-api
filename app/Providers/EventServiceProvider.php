@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\User\BadgeUnlocked;
+use App\Listeners\RewardUnlocked;
 use App\Listeners\User\InitiateCashbackPayment;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,6 +25,15 @@ class EventServiceProvider extends ServiceProvider
         BadgeUnlocked::class => [
             InitiateCashbackPayment::class,
         ],
+    ];
+
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        RewardUnlocked::class,
     ];
 
     /**
